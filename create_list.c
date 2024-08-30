@@ -41,7 +41,7 @@ list_p *add_node_end(list_p **head, const char *str)
 
 /**
  * create_path_list - creates a linked list of PATH directories
- * 
+ *
  * Return: pointer to head of list
  */
 list_p *create_path_list(void)
@@ -61,6 +61,7 @@ list_p *create_path_list(void)
 			while (head != NULL)
 			{
 				list_p *temp2 = head;
+
 				head = head->next;
 				free(temp2->str);
 				free(temp2);

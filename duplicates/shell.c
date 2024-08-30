@@ -1,6 +1,44 @@
 #include "main.h"
 
 /**
+ * tokenize - separates a string into tokens
+ * @path: the source of the string to be tokenized
+ *
+ * Return: the tokenized string
+ */
+
+char **tokenize(char *path)
+{
+	char **paths, *token;
+	int len = 0, i = 0, size = 1;
+
+	paths = malloc(1 * sizeof(char *));
+	if (paths == NULL)
+		return (NULL);
+
+	while (path[len] != '\0')
+		len++;
+
+	token = strtok(path, " \n");
+	while (token != NULL)
+	{
+		size += len;
+		paths[i] = malloc(size * sizeof(char *));
+		if (paths[i] == NULL)
+		{
+			free(paths);
+			return (NULL);
+		}
+		_strcpy(paths[i], token);
+		i++;
+		token = strtok(NULL, " \n");
+	}
+
+	paths[i] = NULL;
+	return (paths);
+}
+
+/**
  * main - initialized an interactive shell
  *
  * Return: the corresponding output of the shell command
@@ -8,11 +46,11 @@
 int main(void)
 {
 	ssize_t read;
-	char *line = NULL, *token, *path_env, *path_token, *dup_path;
+	char *line = NULL, *path_env, *path_token, *dup_path;
 	size_t len = 0;
 	pid_t child_pid;
 	char *argv[64], path[1024];
-	int i, status;
+	int status;
 
 	while (1)
 	{
@@ -24,16 +62,7 @@ int main(void)
 			exit(EXIT_FAILURE);
 			free(line);
 		}
-
-		i = 0;
-
-		token = strtok(line, " \n");
-		while (token != NULL)
-		{
-			argv[i++] = token;
-			token = strtok(NULL, " \n");
-		}
-		argv[i] = NULL;
+		tokenize(line, argv);
 
 		if (argv[0] && _strcmp(argv[0], "exit") == 0)
 		{

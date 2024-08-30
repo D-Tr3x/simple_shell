@@ -9,14 +9,33 @@
  */
 char *_strchr(const char *str, char c)
 {
-    while(*str != '\0')
-    {
-        if (*str == c)
-            return ((char *)str);
-        str++;
-    }
+	while (*str != '\0')
+	{
+		if (*str == c)
+			return ((char *)str);
+		str++;
+	}
 
-    return (NULL);
+	return (NULL);
+}
+
+/**
+ * _strcpy - copies a string from one source to another
+ * @dest: the destination of the copied string
+ * @src: the source of the copied string
+ *
+ * Return: Nothing
+ */
+void _strcpy(char *dest, char *src)
+{
+	int i = 0;
+
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
 }
 
 /**
@@ -28,12 +47,13 @@ char *_strchr(const char *str, char c)
  */
 int _strcmp(const char *s1, const char *s2)
 {
-        while ((*s1 == *s2) && *s1)
-        {
-                s1++;
-                s2++;
-        }
-        return *(unsigned char *)s1 - *(unsigned char *)s2;
+	while ((*s1 == *s2) && *s1)
+	{
+		s1++;
+		s2++;
+	}
+
+	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }
 
 /**
@@ -44,32 +64,32 @@ int _strcmp(const char *s1, const char *s2)
  */
 char *_strdup(const char *str)
 {
-        unsigned int i = 0, size;
-        char *dup;
+	unsigned int i = 0, size;
+	char *dup;
 
-        if (str == NULL)
-                return (NULL);
+	if (str == NULL)
+		return (NULL);
 
-        while (str[i])
-                i++;
+	while (str[i])
+		i++;
 
-        size = i + 1;
+	size = i + 1;
 
-        dup = malloc(sizeof(char) * size);
-        if (dup == NULL)
-                return (NULL);
+	dup = malloc(sizeof(char) * size);
+	if (dup == NULL)
+		return (NULL);
 
-        for (i = 0; i < size; i++)
-                dup[i] = str[i];
+	for (i = 0; i < size; i++)
+		dup[i] = str[i];
 
-        return (dup);
+	return (dup);
 }
 
 /**
- * _strcmp - compares two strings up to a specified length
+ * _strncmp - compares two strings up to a specified length
  * @s1: first string
  * @s2: second string
- * @n: maximum number of characters to compare
+ * @num: maximum number of characters to compare
  *
  * Return: 0 if equal, or the integer difference
  */

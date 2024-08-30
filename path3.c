@@ -1,7 +1,9 @@
 #include "main.h"
 
 /**
+ * print_dir - prints the path of a directory
  *
+ * Return: Nothing
  */
 void print_dir(void)
 {
@@ -21,12 +23,3 @@ void print_dir(void)
 		directory = strtok(NULL, ":");
 	}
 }
-
-/**
- * int main(void)
-{
-	print_dir();
-
-	return (0);
-	}
-*/

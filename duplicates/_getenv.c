@@ -24,7 +24,7 @@ char *_getenv(const char *name)
 		{
 			j++;
 		}
-		
+
 		if (var[j] == '=' && name[j] == '\0')
 			return (var + j + 1);
 		i++;
