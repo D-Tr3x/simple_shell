@@ -29,30 +29,34 @@ ssize_t read_line(char **line, size_t *len)
 }
 
 /**
- * check_exit - exits the shell if the input is "exit"
- * @line: buffer to be freed before exit;
+ * tokenize - separates a string into tokens
+ * @line: the source of the string to be tokenized
+ * @argv: array for storing tokenized string
+ *
+ * Return: the tokenized string
  */
-void check_exit(char *line)
+void tokenize(char *line, char *argv[])
 {
-	if (_strcmp(line, "exit\n") == 0)
+	char *token;
+	int i = 0;
+
+	token = strtok(line, "\n");
+	while (token != NULL)
 	{
-		free(line);
-		exit(EXIT_SUCCESS);
+		argv[i++] = token;
+		token = strtok(NULL, "\n");
 	}
+	argv[i] = NULL;
 }
 
 /**
  * fwxec - forks, waits and executes a command
  * @cmd: arguments list (commands)
  */
-void fwxec(char *cmd)
+void fwxec(char *argv[])
 {
 	pid_t child_pid;
 	int status;
-	char *argv[2];
-
-	argv[0] = cmd;
-	argv[1] = NULL;
 
 	child_pid = fork();
 	if (child_pid == -1)
@@ -80,23 +84,24 @@ void fwxec(char *cmd)
  */
 int main(void)
 {
-	char *line = NULL, *ptr;
+	ssize_t read;
+	char *line = NULL, *argv[99];
 	size_t len = 0;
 
 	while (1)
 	{
-		read_line(&line, &len);
-		check_exit(line);
+		read = read_line(&line, &len);
+		if (read == -1)
+		{
+			free(line);
+			exit(EXIT_FAILURE);
+		}
 
-		ptr = line;
-		while (ptr[len] != '\n' && ptr[len] != '\0')
-			len++;
-		ptr[len] = '\0';
+		tokenize(line, argv);
+		if (argv[0] == NULL)
+			continue;
 
-		if (access(line, X_OK) == 0)
-			fwxec(line);
-		else
-			perror("Error");
+		fwxec(argv);
 	}
 
 	free(line);
