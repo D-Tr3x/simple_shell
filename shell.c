@@ -11,7 +11,6 @@ ssize_t read_line(char **line, size_t *len)
 {
 	ssize_t read;
 
-	printf("$ ");
 	read = getline(line, len, stdin);
 	if (read == -1)
 	{
@@ -90,11 +89,18 @@ int main(void)
 
 	while (1)
 	{
+		printf("$ ");
 		read = read_line(&line, &len);
 		if (read == -1)
 		{
 			free(line);
-			exit(EXIT_FAILURE);
+			if (feof(stdin))
+				exit(EXIT_SUCCESS);
+			else
+			{
+				perror("Error");
+				exit(EXIT_FAILURE);
+			}
 		}
 
 		tokenize(line, argv);
