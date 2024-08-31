@@ -16,7 +16,7 @@ ssize_t read_line(char **line, size_t *len)
 	{
 		free(*line);
 		if (feof(stdin))
-			exit(EXIT_SUCCESS);
+			exit(EXIT_FAILURE);
 		else
 		{
 			perror("Error");
