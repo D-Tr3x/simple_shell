@@ -16,84 +16,43 @@ ssize_t read_line(char **line, size_t *len)
 	if (read == -1)
 	{
 		free(*line);
-		exit(EXIT_FAILURE);
+		if (feof(stdin))
+			exit(EXIT_SUCCESS);
+		else
+		{
+			perror("Error");
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	return (read);
 }
-/**
- * tokenize - separates a string into tokens
- * @path: the source of the string to be tokenized
- * @argv: array for storing tokenized string
- *
- * Return: the tokenized string
- */
-
-void tokenize(char *path, char *argv[])
-{
-	char *token;
-	int i = 0;
-
-	token = strtok(path, " \n");
-	while (token != NULL)
-	{
-		argv[i] = token;
-		i++;
-		token = strtok(NULL, " \n");
-	}
-
-	argv[i] = NULL;
-}
 
 /**
  * check_exit - exits the shell if the input is "exit"
- * @argv: arguments list
  * @line: buffer to be freed before exit;
  */
-void check_exit(char **argv, char *line)
+void check_exit(char *line)
 {
-	if (argv[0] && _strcmp(argv[0], "exit") == 0)
+	if (_strcmp(line, "exit\n") == 0)
 	{
 		free(line);
 		exit(EXIT_SUCCESS);
 	}
 }
-/**
- * handle_path - handles the full path of a command
- * @argv: double pointer to arguments (command)
- */
-void handle_path(char **argv)
-{
-	char *path_env, *dup_path, *path_token, path[1024];
-
-	if (!_strchr(argv[0], '/'))
-	{
-		path_env = _getenv("PATH");
-		dup_path = _strdup(path_env);
-		path_token = strtok(dup_path, ":");
-		while (path_token != NULL)
-		{
-			sprintf(path, "%s/%s", path_token, argv[0]);
-
-			if (access(path, X_OK) == 0)
-			{
-				argv[0] = path;
-				break;
-			}
-			path_token = strtok(NULL, ":");
-		}
-		free(dup_path);
-	}
-}
 
 /**
  * fwxec - forks, waits and executes a command
- * @argv: arguments list (commands)
+ * @cmd: arguments list (commands)
  */
-void fwxec(char **argv)
+void fwxec(char *cmd)
 {
 	pid_t child_pid;
 	int status;
+	char *argv[2];
+
+	argv[0] = cmd;
+	argv[1] = NULL;
 
 	child_pid = fork();
 	if (child_pid == -1)
@@ -114,3 +73,32 @@ void fwxec(char **argv)
 		wait(&status);
 }
 
+/**
+ * main - intializes an interactive shell
+ *
+ * Return: corresponding output of the shell
+ */
+int main(void)
+{
+	char *line = NULL, *ptr;
+	size_t len = 0;
+
+	while (1)
+	{
+		read_line(&line, &len);
+		check_exit(line);
+
+		ptr = line;
+		while (ptr[len] != '\n' && ptr[len] != '\0')
+			len++;
+		ptr[len] = '\0';
+
+		if (access(line, X_OK) == 0)
+			fwxec(line);
+		else
+			perror("Error");
+	}
+
+	free(line);
+	exit(EXIT_SUCCESS);
+}

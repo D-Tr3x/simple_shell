@@ -31,11 +31,17 @@ char *_strchr(const char *str, char c);
 char *_strdup(const char *str);
 char *_getenv(const char *name);
 
+/**
+ *ssize_t read_line(char **line, size_t *len);
+ *void tokenize(char *path, char *argv[]);
+ *void check_exit(char **argv, char *line);
+ *void handle_path(char **argv);
+ *void fwxec(char **argv);
+ */
+
 ssize_t read_line(char **line, size_t *len);
-void tokenize(char *path, char *argv[]);
-void check_exit(char **argv, char *line);
-void handle_path(char **argv);
-void fwxec(char **argv);
+void check_exit(char *line);
+void fwxec(char *argv);
 
 list_p *add_node_end(list_p **head, const char *str);
 list_p *create_path_list(void);
