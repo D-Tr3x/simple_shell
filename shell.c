@@ -50,7 +50,7 @@ void tokenize(char *line, char *argv[])
 
 /**
  * fwxec - forks, waits and executes a command
- * @cmd: arguments list (commands)
+ * @argv: pointer to arguments list (commands)
  */
 void fwxec(char *argv[])
 {
